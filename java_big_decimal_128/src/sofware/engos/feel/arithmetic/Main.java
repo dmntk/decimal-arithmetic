@@ -1,6 +1,7 @@
 package sofware.engos.feel.arithmetic;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
@@ -151,23 +152,58 @@ class LoanComparator {
 
     return result;
   }
+
+  void run() {
+    BigDecimal requestedAmt = dec_str("330000");
+    BigDecimal points = dec_int(0);
+    BigDecimal fee = dec_int(0);
+    BigDecimal rate = dec_str("0.03500");
+    BigDecimal loanAmt = loanAmt(requestedAmt, points, fee);
+    BigDecimal paymentAmt = monthlyPayment(loanAmt, rate, dec_int(360));
+    BigDecimal equity36Mo = equity36Mo(loanAmt, rate, dec_int(36), paymentAmt);
+    BigDecimal equity36moPct = equity36moPct(requestedAmt, loanAmt, rate, equity36Mo, paymentAmt);
+    System.out.println("\n\nRESULT");
+    System.out.println("--------------------------------------------------------------------------------------");
+    System.out.printf("  paymentAmt    = %s\n", paymentAmt);
+    System.out.printf("  equity36moPct = %s\n", equity36moPct);
+  }
 }
+
 
 public class Main {
 
   public static void main(String[] args) {
     LoanComparator comparator = new LoanComparator();
-    BigDecimal requestedAmt = dec_str("330000");
-    BigDecimal points = dec_int(0);
-    BigDecimal fee = dec_int(0);
-    BigDecimal rate = dec_str("0.03500");
-    BigDecimal loanAmt = comparator.loanAmt(requestedAmt, points, fee);
-    BigDecimal paymentAmt = comparator.monthlyPayment(loanAmt, rate, dec_int(360));
-    BigDecimal equity36Mo = comparator.equity36Mo(loanAmt, rate, dec_int(36), paymentAmt);
-    BigDecimal equity36moPct = comparator.equity36moPct(requestedAmt, loanAmt, rate, equity36Mo, paymentAmt);
-    System.out.println("\n\nRESULT");
-    System.out.println("--------------------------------------------------------------------------------------");
-    System.out.printf("  paymentAmt    = %s\n", paymentAmt);
-    System.out.printf("  equity36moPct = %s\n", equity36moPct);
+    comparator.run();
+
+    //sqrt
+    check_sqrt("16");
+    check_sqrt("13.475896857");
+
+    // log()
+    check_log("10");
+    check_log("18.384757546");
+
+    // exp()
+    check_exp("5");
+    check_exp("12");
+  }
+
+  static void check_sqrt(String value) {
+    BigDecimal in = dec_str(value);
+    BigDecimal out = in.sqrt(MATH_CONTEXT);
+    System.out.printf("\nsqrt(%s) = %s", in, out);
+  }
+
+  static void check_log(String value) {
+    BigDecimal in = dec_str(value);
+    BigDecimal out = BigMath.ln(in, SCALE);
+    System.out.printf("\nln(%s) = %s", in, out);
+  }
+
+  static void check_exp(String value) {
+    BigDecimal in = dec_str(value);
+    BigDecimal out = BigMath.exp(in, SCALE);
+    System.out.printf("\nexp(%s) = %s", in, out);
   }
 }

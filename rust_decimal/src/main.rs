@@ -5,6 +5,7 @@ use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::{Decimal, MathematicalOps};
 use rust_decimal_macros::dec;
 use std::ops::{Add, Div, Mul, Sub};
+use std::str::FromStr;
 
 const DEC_0: Decimal = dec!(0);
 const DEC_MINUS_1: Decimal = dec!(-1);
@@ -130,7 +131,7 @@ fn equity_36_mo_pct(requested_amt: Decimal, loan_amt: Decimal, rate: Decimal, eq
   result
 }
 
-fn main() {
+fn run() {
   let requested_amt = dec!(330000);
   let points = DEC_0;
   let fee = DEC_0;
@@ -143,4 +144,38 @@ fn main() {
   println!("--------------------------------------------------------------------------------------");
   println!("  paymentAmt    = {}", payment_amt);
   println!("  equity36moPct = {}", equity_36_mo_pct);
+}
+
+fn check_sqrt(value_str: &str) {
+  let value = Decimal::from_str(value_str).unwrap();
+  println!("sqrt({}) = {}", value, value.sqrt().unwrap().normalize());
+}
+
+fn check_log(value_str: &str) {
+  let value = Decimal::from_str(value_str).unwrap();
+  println!("ln({}) = {}", value, value.ln().normalize());
+}
+
+fn check_exp(value_str: &str) {
+  let value = Decimal::from_str(value_str).unwrap();
+  println!("exp({}) = {}", value, value.exp_with_tolerance(dec!(0.000_000_2)).normalize());
+  println!("exp({}) = {}", value, value.exp_with_tolerance(dec!(0.000_000_002)).normalize());
+  println!("exp({}) = {}", value, value.exp_with_tolerance(dec!(0.000_000_000_2)).normalize());
+  println!("exp({}) = {}", value, value.exp_with_tolerance(dec!(0.000_000_000_000_2)).normalize());
+}
+
+fn main() {
+  run();
+
+  // sqrt()
+  check_sqrt("16");
+  check_sqrt("13.475896857");
+
+  // log()
+  check_log("10");
+  check_log("18.384757546");
+
+  // exp()
+  check_exp("5");
+  check_exp("11");
 }
