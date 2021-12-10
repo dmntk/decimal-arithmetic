@@ -27,27 +27,27 @@ interface Constants {
 class LoanComparator {
 
   /**
-   * Calculates equity36moPct = 1 - equity36Mo(loanAmt, rate, n, paymentAmt) / requestedAmt * 0.8
+   * Calculates loanAmt = requestedAmt * (1 + points/100) + fee
    */
-  BigDecimal equity36moPct(BigDecimal requestedAmt, BigDecimal loanAmt, BigDecimal rate, BigDecimal equity36Mo, BigDecimal paymentAmt) {
-    System.out.print("\n>> calculating equity36moPct:\n");
+  BigDecimal loanAmt(BigDecimal requestedAmt, BigDecimal points, BigDecimal fee) {
+    System.out.print("\n>> calculating loanAmt:\n");
 
     System.out.printf(">> requestedAmt = %s\n", requestedAmt);
-    System.out.printf(">>      loanAmt = %s\n", loanAmt);
-    System.out.printf(">>         rate = %s\n", rate);
-    System.out.printf(">>   equity36Mo = %s\n", equity36Mo);
-    System.out.printf(">>   paymentAmt = %s\n", paymentAmt);
+    System.out.printf(">>       points = %s\n", points);
+    System.out.printf(">>          fee = %s\n", fee);
 
+    BigDecimal points_div_100 = points.divide(DEC_100, SCALE, ROUNDING_MODE);
+    System.out.printf("points/100 = %s\n", points_div_100);
 
-    BigDecimal equity36Mo_div_requestedAmt = equity36Mo.divide(requestedAmt, SCALE, ROUNDING_MODE);
-    System.out.printf("equity36Mo / requestedAmt = %s\n", equity36Mo_div_requestedAmt);
+    BigDecimal one_plus_points_div_100 = DEC_1.add(points_div_100, MATH_CONTEXT);
+    System.out.printf("1 + points/100 = %s\n", one_plus_points_div_100);
 
-    BigDecimal equity36Mo_div_requestedAmt_mul_08 = equity36Mo_div_requestedAmt.multiply(dec_str("0.8"), MATH_CONTEXT);
-    System.out.printf("equity36Mo / requestedAmt * 0.8 = %s\n", equity36Mo_div_requestedAmt_mul_08);
+    BigDecimal requested_amt_mul_one_plus_points_div_100 = requestedAmt.multiply(one_plus_points_div_100, MATH_CONTEXT);
+    System.out.printf("requestedAmt * (1 + points/100) = %s\n", requested_amt_mul_one_plus_points_div_100);
 
-    BigDecimal result = DEC_1.subtract(equity36Mo_div_requestedAmt_mul_08, MATH_CONTEXT);
-    System.out.printf("1 - equity36Mo / requestedAmt * 0.8 = %s\n", result);
-    System.out.printf("<< equity36moPct = %s\n", result);
+    BigDecimal result = requested_amt_mul_one_plus_points_div_100.add(fee, MATH_CONTEXT);
+    System.out.printf("requestedAmt * (1 + points/100) + fee = %s\n", result);
+    System.out.printf("<< loanAmt = %s\n", result);
 
     return result;
   }
@@ -88,32 +88,6 @@ class LoanComparator {
   }
 
   /**
-   * Calculates loanAmt = requestedAmt * (1 + points/100) + fee
-   */
-  BigDecimal loanAmt(BigDecimal requestedAmt, BigDecimal points, BigDecimal fee) {
-    System.out.print("\n>> calculating loanAmt:\n");
-
-    System.out.printf(">> requestedAmt = %s\n", requestedAmt);
-    System.out.printf(">>       points = %s\n", points);
-    System.out.printf(">>          fee = %s\n", fee);
-
-    BigDecimal points_div_100 = points.divide(DEC_100, SCALE, ROUNDING_MODE);
-    System.out.printf("points/100 = %s\n", points_div_100);
-
-    BigDecimal one_plus_points_div_100 = DEC_1.add(points_div_100, MATH_CONTEXT);
-    System.out.printf("1 + points/100 = %s\n", one_plus_points_div_100);
-
-    BigDecimal requested_amt_mul_one_plus_points_div_100 = requestedAmt.multiply(one_plus_points_div_100, MATH_CONTEXT);
-    System.out.printf("requestedAmt * (1 + points/100) = %s\n", requested_amt_mul_one_plus_points_div_100);
-
-    BigDecimal result = requested_amt_mul_one_plus_points_div_100.add(fee, MATH_CONTEXT);
-    System.out.printf("requestedAmt * (1 + points/100) + fee = %s\n", result);
-    System.out.printf("<< loanAmt = %s\n", result);
-
-    return result;
-  }
-
-  /**
    * Calculates equity36Mo = p * (1 + r/12) ** n - pmt * (-1 + (1 + r/12) ** n) / r
    */
   BigDecimal equity36Mo(BigDecimal p, BigDecimal r, BigDecimal n, BigDecimal pmt) {
@@ -148,6 +122,32 @@ class LoanComparator {
     BigDecimal result = p_mul_one_plus_r_div_12_pow_n.subtract(pmt_mul_neg_one_one_plus_r_div_12_pow_n_div_r, MATH_CONTEXT);
     System.out.printf("p * (1 + r/12) ** n - pmt * (-1 + (1 + r/12) ** n) / r = %s\n", result);
     System.out.printf("<< equity36Mo = %s\n", result);
+
+    return result;
+  }
+
+  /**
+   * Calculates equity36moPct = 1 - equity36Mo(loanAmt, rate, n, paymentAmt) / requestedAmt * 0.8
+   */
+  BigDecimal equity36moPct(BigDecimal requestedAmt, BigDecimal loanAmt, BigDecimal rate, BigDecimal equity36Mo, BigDecimal paymentAmt) {
+    System.out.print("\n>> calculating equity36moPct:\n");
+
+    System.out.printf(">> requestedAmt = %s\n", requestedAmt);
+    System.out.printf(">>      loanAmt = %s\n", loanAmt);
+    System.out.printf(">>         rate = %s\n", rate);
+    System.out.printf(">>   equity36Mo = %s\n", equity36Mo);
+    System.out.printf(">>   paymentAmt = %s\n", paymentAmt);
+
+
+    BigDecimal equity36Mo_div_requestedAmt = equity36Mo.divide(requestedAmt, SCALE, ROUNDING_MODE);
+    System.out.printf("equity36Mo / requestedAmt = %s\n", equity36Mo_div_requestedAmt);
+
+    BigDecimal equity36Mo_div_requestedAmt_mul_08 = equity36Mo_div_requestedAmt.multiply(dec_str("0.8"), MATH_CONTEXT);
+    System.out.printf("equity36Mo / requestedAmt * 0.8 = %s\n", equity36Mo_div_requestedAmt_mul_08);
+
+    BigDecimal result = DEC_1.subtract(equity36Mo_div_requestedAmt_mul_08, MATH_CONTEXT);
+    System.out.printf("1 - equity36Mo / requestedAmt * 0.8 = %s\n", result);
+    System.out.printf("<< equity36moPct = %s\n", result);
 
     return result;
   }
