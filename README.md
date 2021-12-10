@@ -1,5 +1,9 @@
 # FEEL arithmetic comparison
 
+## Example from official test case
+
+Test case: [compliance-level-3/0014-loan-comparison](https://github.com/dmn-tck/tck/blob/master/TestCases/compliance-level-3/0014-loan-comparison/0014-loan-comparison-test-01.xml)
+
 | Language and settings          | paymentAmt                                  | equity36moPct                            |
 |--------------------------------|---------------------------------------------|------------------------------------------|
 | **FEEL** test case             | `1481.847469769075`                         | `0.1229130806675829`                     |
