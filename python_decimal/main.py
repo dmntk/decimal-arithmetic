@@ -130,4 +130,6 @@ def main():
 
 
 if __name__ == '__main__':
+    getcontext().clamp = 1
+    getcontext().prec = 36
     main()
