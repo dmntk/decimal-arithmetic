@@ -35,3 +35,13 @@ Test case: [compliance-level-3/0014-loan-comparison](https://github.com/dmn-tck/
 | **FEEL** specification         | `148.413159102577`                         |
 | **Java** BigDecimal DECIMAL128 | `148.413159102576603421115580040552279711` |
 | **Rust** rust_decimal          | `148.41315910242917001115674611`           |
+
+## Some benchmarks
+
+| Operation               | rust_decimal | decNumber with FFI |       |
+|-------------------------|--------------|--------------------|-------|
+| addition: 0.1+0.3       |  9 ns        |  15 ns             | +166% |
+| subtraction: 0.1-0.3    |  9 ns        |  76 ns             | +844% |
+| multiplication: 0.1*0.3 |  8 ns        |  30 ns             | +375% |
+| division: 0.1/0.3       | 33 ns        |  89 ns             | +269% |
+| comparison: 0.1 > 0.3   |  4 ns        |  24 ns             | +600% |

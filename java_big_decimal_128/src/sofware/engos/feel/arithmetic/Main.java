@@ -177,16 +177,24 @@ public class Main {
     comparator.run();
 
     //sqrt
+    check_sqrt("2");
     check_sqrt("16");
     check_sqrt("13.475896857");
 
     // log()
+    check_log("4");
     check_log("10");
     check_log("18.384757546");
 
     // exp()
+    check_exp("4");
     check_exp("5");
     check_exp("12");
+
+    // pow()
+    check_pow("2", "3");
+    check_pow("12.2384283", "4.25");
+    check_pow("8", "-3");
   }
 
   static void check_sqrt(String value) {
@@ -205,5 +213,12 @@ public class Main {
     BigDecimal in = dec_str(value);
     BigDecimal out = BigMath.exp(in, SCALE);
     System.out.printf("\nexp(%s) = %s", in, out);
+  }
+
+  static void check_pow(String value1, String value2) {
+    BigDecimal in1 = dec_str(value1);
+    BigDecimal in2 = dec_str(value2);
+    BigDecimal out = BigMath.pow(in1, in2);
+    System.out.printf("\npow(%s,%s) = %s", in1,in2, out);
   }
 }
