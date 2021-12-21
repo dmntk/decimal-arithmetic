@@ -40,8 +40,8 @@ Test case: [compliance-level-3/0014-loan-comparison](https://github.com/dmn-tck/
 
 | Operation               | rust_decimal | decNumber with FFI |       |
 |-------------------------|--------------|--------------------|-------|
-| addition: 0.1+0.3       |  9 ns        |  15 ns             | +166% |
-| subtraction: 0.1-0.3    |  9 ns        |  76 ns             | +844% |
-| multiplication: 0.1*0.3 |  8 ns        |  30 ns             | +375% |
-| division: 0.1/0.3       | 33 ns        |  89 ns             | +269% |
-| comparison: 0.1 > 0.3   |  4 ns        |  24 ns             | +600% |
+| addition: 0.1+0.3       |  `9 ns`      |  `15 ns`           | +166% |
+| subtraction: 0.1-0.3    |  `9 ns`      |  `76 ns`           | +844% |
+| multiplication: 0.1*0.3 |  `8 ns`      |  `30 ns`           | +375% |
+| division: 0.1/0.3       | `33 ns`      |  `89 ns`           | +269% |
+| comparison: 0.1 > 0.3   |  `4 ns`      |  `24 ns`           | +600% |
