@@ -13,6 +13,13 @@ fn bench_dec_add(b: &mut Bencher) {
 }
 
 #[bench]
+fn bench_dec_add_1(b: &mut Bencher) {
+  let x = dec!(123.45);
+  let y = dec!(0.3847847);
+  b.iter(|| x + y)
+}
+
+#[bench]
 fn bench_dec_sub(b: &mut Bencher) {
   let x = dec!(0.1);
   let y = dec!(0.3);

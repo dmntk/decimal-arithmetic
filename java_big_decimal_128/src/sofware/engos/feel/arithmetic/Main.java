@@ -187,6 +187,7 @@ public class Main {
     check_log("18.384757546");
 
     // exp()
+    check_exp("-1");
     check_exp("4");
     check_exp("5");
     check_exp("12");
